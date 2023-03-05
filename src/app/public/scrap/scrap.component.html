@@ -1,0 +1,36 @@
+<div class="container">
+  <form class="scrap-form" [formGroup]="scrapForm" (ngSubmit)="onSubmit()">
+    <mat-form-field>
+      <mat-label>Urls(separated with a ",")</mat-label>
+      <textarea
+        matInput
+        (input)="getUrlsInProperFormat($event)"
+        placeholder="https://google.com, https://google.pl"
+        [value]="urls"
+      ></textarea>
+    </mat-form-field>
+    <mat-form-field>
+      <div class="input-title">
+        Fieldname:
+        <mat-icon (click)="addNewSelectorField(Fieldname.value)"
+          >add_circle</mat-icon
+        >
+      </div>
+      <input #Fieldname matInput placeholder="ex. Mom's name" />
+    </mat-form-field>
+
+    <mat-form-field *ngFor="let field of listOfFields">
+      <div class="input-title">
+        Selector for {{ field }}:
+        <mat-icon (click)="removeSelectorField(field)">remove_circle</mat-icon>
+      </div>
+      <input
+        (change)="updateSelector(field, $event)"
+        [value]="selectorsDict[field]"
+        matInput
+        placeholder="ex. div > p.nth-of-type(1)"
+      />
+    </mat-form-field>
+    <button type="submit" mat-raised-button color="primary">Scrap me!</button>
+  </form>
+</div>
