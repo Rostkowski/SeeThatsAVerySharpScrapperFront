@@ -5,7 +5,7 @@
       <textarea
         matInput
         (input)="getUrlsInProperFormat($event)"
-        placeholder="https://google.com, https://google.pl"
+        placeholder="E.g. https://google.com, https://google.pl"
         [value]="urls"
       ></textarea>
     </mat-form-field>
@@ -28,7 +28,7 @@
         (change)="updateSelector(field, $event)"
         [value]="selectorsDict[field]"
         matInput
-        placeholder="ex. div > p.nth-of-type(1)"
+        placeholder="E.g. div > p.nth-of-type(1)"
       />
     </mat-form-field>
     <button type="submit" mat-raised-button color="primary">Scrap me!</button>
