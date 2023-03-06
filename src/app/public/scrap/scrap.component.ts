@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ScrapService } from 'src/app/services/scrap.service';
+import { finalize} from 'rxjs';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-scrap',
@@ -18,6 +20,9 @@ export class ScrapComponent implements OnInit {
     field: '',
     selectors: '',
   });
+  isDataFetched: boolean = false;
+  isLoading: boolean = false;
+  scrapedData: any;
 
   ngOnInit() {
     this.listOfFields = JSON.parse(
@@ -26,7 +31,7 @@ export class ScrapComponent implements OnInit {
     this.selectorsDict = JSON.parse(
       window.localStorage.getItem('selectorsDict') ?? ''
     );
-    this.urls = JSON.parse(window.localStorage.getItem('urls') ?? '')
+    this.urls = JSON.parse(window.localStorage.getItem('urls') ?? '');
   }
 
   onSubmit() {
@@ -41,13 +46,24 @@ export class ScrapComponent implements OnInit {
     );
 
     window.localStorage.setItem('urls', JSON.stringify(this.urls));
+
+    this.isLoading = true;
+
     this.scrapService
       .scrapData({
         urls: this.urls,
         cssSelectors: this.selectorsDict,
       })
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+        })
+      )
       .subscribe((res) => {
-        console.log(res);
+        if (res.ok) {
+          this.isDataFetched = true;
+          this.scrapedData = res.body?.scrapedData;
+        }
       });
   }
 
@@ -75,4 +91,15 @@ export class ScrapComponent implements OnInit {
       .replace(/(?:\r\n|\r|\n)/g, '')
       .split(',');
   }
+
+  downloadFile(data: any) {
+    const replacer = (key: string, value: string) => value === null ? '' : value;
+    const header = Object.keys(data[0]);
+    let csv = data.map((row: any) => header.map((fieldName: string) => JSON.stringify(row[fieldName], replacer)).join(','));
+    csv.unshift(header.join(','));
+    let csvArray = csv.join('\r\n');
+
+    var blob = new Blob([csvArray], {type: 'text/csv' })
+    saveAs(blob, "scrapedData.csv");
+}
 }

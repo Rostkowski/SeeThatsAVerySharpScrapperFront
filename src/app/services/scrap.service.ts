@@ -15,6 +15,10 @@ export class ScrapService {
   scrapData(
     data: ScrapDataRequest
   ): Observable<HttpResponse<ScrappedDataResponse>> {
-    return this.httpClient.post<ScrappedDataResponse>(`${environment.API_BASE_URL}Scrap/ScrapWebsites/`, data, {observe: 'response'});
+    return this.httpClient.post<ScrappedDataResponse>(
+      `${environment.API_BASE_URL}Scrap/ScrapWebsites/`,
+      data,
+      { observe: 'response' }
+    );
   }
 }

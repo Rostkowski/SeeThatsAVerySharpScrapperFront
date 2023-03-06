@@ -8,9 +8,8 @@ describe('ScrapComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ScrapComponent ]
-    })
-    .compileComponents();
+      declarations: [ScrapComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ScrapComponent);
     component = fixture.componentInstance;
